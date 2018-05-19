@@ -5,7 +5,6 @@
  */
 package IA;
 
-import static IA.JogoDaVelha1.jPanelTabuleiro;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -21,38 +20,48 @@ import javax.swing.JOptionPane;
  * @author Mateus
  */
 public class Game extends javax.swing.JFrame implements ActionListener {
-
-    private int[][] winCombinations = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9},
+    
+    //matriz das posições que gera vitoria
+    private int[][] combinacoesParaVencer = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9},
     {1, 4, 7}, {2, 5, 8}, {3, 6, 9}, {1, 5, 9}, {3, 5, 7}};
-
-    private static JButton[] buttons = new JButton[10];
+    
+    //vetor de botoes da tela
+    private static JButton[] botoesFrame = new JButton[10];
     private int counts = 0;
     private boolean wins = false;
     String result;
     private String player = null;
+    
+    //vitorias da bolinha
     private static int vizero = 0;
+    //impate da bolinha
     private static int inzero = 0;
     private static int egall = 0;
+    
+    //vitoria do x
     private static int vix = 0;
+    //impate do x
     private static int inx = 0;
-    private int[] copie_tabla = new int[10];
+    
+    
+    private int[] copiaTabelaBotoes = new int[10];
 
     /**
      * Creates new form Game
      */
     public Game() {
         initComponents();
-        getbutton();
-        System.out.println(buttons.length);
+        MapButtons();
     }
 
-    private void getbutton() {
+    //metodo copia os botoes do frame e coloca no vetor ordenado pelo nome do botao
+    private void MapButtons() {
         for (Component b : this.getContentPane().getComponents()) {
             if (b instanceof JButton) {
                 ((JButton) b).setText("");
                 ((JButton) b).setCursor(new Cursor(Cursor.HAND_CURSOR));
                 ((JButton) b).addActionListener(this);
-                buttons[Integer.parseInt(((JButton) b).getName())] = (JButton) b;
+                botoesFrame[Integer.parseInt(((JButton) b).getName())] = (JButton) b;
             }
         }
     }
@@ -69,13 +78,13 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         return poz_0;
     }
 
-    public int[] copie_tabla() {
+    public int[] copiaTabelaBotoes() {
         int[] tabla = new int[10];
 
         for (int cas = 1; cas <= 9; cas++) {
-            if (buttons[cas].getText().equals("X")) {
+            if (botoesFrame[cas].getText().equals("X")) {
                 tabla[cas] = 1;
-            } else if (buttons[cas].getText().equals("O")) {
+            } else if (botoesFrame[cas].getText().equals("O")) {
                 tabla[cas] = 2;
             } else {
                 tabla[cas] = 0;
@@ -92,19 +101,19 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         boolean game_over = false;
 
         for (int i = 0; i <= 7; i++) {
-            if ((cc[winCombinations[i][0]] == 1)
-                    && (cc[winCombinations[i][0]] == cc[winCombinations[i][1]])
-                    && (cc[winCombinations[i][1]] == cc[winCombinations[i][2]])
-                    && (cc[winCombinations[i][0]] != 0)) {
+            if ((cc[combinacoesParaVencer[i][0]] == 1)
+                    && (cc[combinacoesParaVencer[i][0]] == cc[combinacoesParaVencer[i][1]])
+                    && (cc[combinacoesParaVencer[i][1]] == cc[combinacoesParaVencer[i][2]])
+                    && (cc[combinacoesParaVencer[i][0]] != 0)) {
                 game_over = true;
                 winn = "X";
                 rez = -1000000;
             }
 
-            if ((cc[winCombinations[i][0]] != 2)
-                    || (cc[winCombinations[i][0]] != cc[winCombinations[i][1]])
-                    || (cc[winCombinations[i][1]] != cc[winCombinations[i][2]])
-                    || (cc[winCombinations[i][0]] == 0)) {
+            if ((cc[combinacoesParaVencer[i][0]] != 2)
+                    || (cc[combinacoesParaVencer[i][0]] != cc[combinacoesParaVencer[i][1]])
+                    || (cc[combinacoesParaVencer[i][1]] != cc[combinacoesParaVencer[i][2]])
+                    || (cc[combinacoesParaVencer[i][0]] == 0)) {
                 continue;
             }
             game_over = true;
@@ -127,19 +136,25 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     }
 
     public void display_winner(int vinn, int infrang, int egal, String tex) {
+        attLabels();
         if (JOptionPane.showConfirmDialog(null, vinn + " Vitórias  ," + egal
                 + "  Empates ," + infrang + "  Derrotas\n" + "Jogar de novo?",
                 tex, 0) != 0) {
 
 // zerando os botões
             for (int i = 1; i <= 9; i++) {
-                buttons[i].setText("");
-                copie_tabla[i] = 0;
+                botoesFrame[i].setText("");
+                copiaTabelaBotoes[i] = 0;
             }// fim do for zerando os botões
             System.exit(0);
         } else {
             newgame();
         }
+    }
+
+    public void attLabels() {
+        lBolinha.setText(String.valueOf(vizero));
+        lxis.setText(String.valueOf(vix));
     }
 
     public void newgame() {
@@ -148,8 +163,8 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         result = "";
 
         for (int i = 1; i <= 9; i++) {
-            buttons[i].setText("");
-            copie_tabla[i] = 0;
+            botoesFrame[i].setText("");
+            copiaTabelaBotoes[i] = 0;
         }
     }
 
@@ -261,22 +276,22 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         wins = false;
 
         for (int i = 0; i <= 7; i++) {
-            if ((buttons[winCombinations[i][0]].getText().equals("X"))
-                    && (buttons[winCombinations[i][0]].getText()
-                            .equals(buttons[winCombinations[i][1]].getText()))
-                    && (buttons[winCombinations[i][1]].getText()
-                            .equals(buttons[winCombinations[i][2]].getText()))
-                    && (!buttons[winCombinations[i][0]].getText().equals(""))) {
+            if ((botoesFrame[combinacoesParaVencer[i][0]].getText().equals("X"))
+                    && (botoesFrame[combinacoesParaVencer[i][0]].getText()
+                            .equals(botoesFrame[combinacoesParaVencer[i][1]].getText()))
+                    && (botoesFrame[combinacoesParaVencer[i][1]].getText()
+                            .equals(botoesFrame[combinacoesParaVencer[i][2]].getText()))
+                    && (!botoesFrame[combinacoesParaVencer[i][0]].getText().equals(""))) {
                 player = "X";
                 wins = true;
             }
 
-            if ((!buttons[winCombinations[i][0]].getText().equals("O"))
-                    || (!buttons[winCombinations[i][0]].getText().equals(
-                            buttons[winCombinations[i][1]].getText()))
-                    || (!buttons[winCombinations[i][1]].getText().equals(
-                            buttons[winCombinations[i][2]].getText()))
-                    || (buttons[winCombinations[i][0]].getText().equals(""))) {
+            if ((!botoesFrame[combinacoesParaVencer[i][0]].getText().equals("O"))
+                    || (!botoesFrame[combinacoesParaVencer[i][0]].getText().equals(
+                            botoesFrame[combinacoesParaVencer[i][1]].getText()))
+                    || (!botoesFrame[combinacoesParaVencer[i][1]].getText().equals(
+                            botoesFrame[combinacoesParaVencer[i][2]].getText()))
+                    || (botoesFrame[combinacoesParaVencer[i][0]].getText().equals(""))) {
                 continue;
             }
             player = "O";
@@ -284,8 +299,8 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         }
 
         for (int c = 1; c <= 9; c++) {
-            if ((buttons[c].getText().equals("X"))
-                    || (buttons[c].getText().equals("O"))) {
+            if ((botoesFrame[c].getText().equals("X"))
+                    || (botoesFrame[c].getText().equals("O"))) {
                 nr++;
             }
         }
@@ -337,8 +352,13 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        lxis = new javax.swing.JLabel();
+        lBolinha = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Inteligência Artificial");
 
         jButton1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
         jButton1.setName("1"); // NOI18N
@@ -370,14 +390,26 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         jLabel1.setText("Jogo da Velha");
 
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 48)); // NOI18N
+        jLabel2.setText("O = ");
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 48)); // NOI18N
+        jLabel3.setText("X = ");
+
+        lxis.setFont(new java.awt.Font("Arial", 1, 48)); // NOI18N
+        lxis.setText("0");
+
+        lBolinha.setFont(new java.awt.Font("Arial", 1, 48)); // NOI18N
+        lBolinha.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(60, 60, 60)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -395,73 +427,60 @@ public class Game extends javax.swing.JFrame implements ActionListener {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lxis))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lBolinha))))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(95, 95, 95)
+                        .addGap(155, 155, 155)
                         .addComponent(jLabel1)))
-                .addContainerGap(187, Short.MAX_VALUE))
+                .addContainerGap(62, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(13, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(63, 63, 63))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(lBolinha))
+                        .addGap(67, 67, 67)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(lxis))
+                        .addGap(97, 97, 97))))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Game.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Game().setVisible(true);
-            }
-        });
-
-    }
 
     @Override
     public void actionPerformed(ActionEvent a) {
@@ -470,14 +489,14 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         if (pressedButton.getText().equals("")) {
             pressedButton.setText("X");
             pressedButton.setForeground(Color.blue);
-            copie_tabla = copie_tabla();
+            copiaTabelaBotoes = copiaTabelaBotoes();
             counts += 1;
             checkWin();
 
-            int poz_max = min_max(copie_tabla);
+            int poz_max = min_max(copiaTabelaBotoes);
 
-            buttons[poz_max].setText("O");
-            buttons[poz_max].setForeground(Color.red);
+            botoesFrame[poz_max].setText("O");
+            botoesFrame[poz_max].setForeground(Color.red);
             counts += 1;
             checkWin();
         } else {
@@ -499,5 +518,9 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lBolinha;
+    private javax.swing.JLabel lxis;
     // End of variables declaration//GEN-END:variables
 }

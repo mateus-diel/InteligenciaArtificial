@@ -66,7 +66,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         }
     }
 
-    public int[] poz_lib_cp(int[] cop) {
+    public int[] posicaoBotoesLivre(int[] cop) {
         int bb = 0;
         int[] poz_0 = new int[10];
         for (int b = 1; b <= 9; b++) {
@@ -100,7 +100,10 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         String winn = "";
         boolean game_over = false;
 
+        
         for (int i = 0; i <= 7; i++) {
+            
+            //percorre a tabela onde pra ver se o X ganhou onde X=1
             if ((cc[combinacoesParaVencer[i][0]] == 1)
                     && (cc[combinacoesParaVencer[i][0]] == cc[combinacoesParaVencer[i][1]])
                     && (cc[combinacoesParaVencer[i][1]] == cc[combinacoesParaVencer[i][2]])
@@ -110,6 +113,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
                 rez = -1000000;
             }
 
+            //percorre a tabela onde pra ver se o O ganhou onde O=2
             if ((cc[combinacoesParaVencer[i][0]] != 2)
                     || (cc[combinacoesParaVencer[i][0]] != cc[combinacoesParaVencer[i][1]])
                     || (cc[combinacoesParaVencer[i][1]] != cc[combinacoesParaVencer[i][2]])
@@ -120,13 +124,15 @@ public class Game extends javax.swing.JFrame implements ActionListener {
             winn = "O";
             rez = 1000000;
         }
-
+        
+        //percorre a tabela pra ver se só há 0
         for (int c = 1; c <= 9; c++) {
             if (cc[c] != 0) {
                 zero++;
             }
         }
 
+        //se tiver somente 0 é pq deu empate
         if ((zero >= 9) && (!game_over)) {
             winn = "Empate";
             rez = 0;
@@ -135,6 +141,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         return rez;
     }
 
+    //informa num joptionpane quem ganhou
     public void display_winner(int vinn, int infrang, int egal, String tex) {
         attLabels();
         if (JOptionPane.showConfirmDialog(null, vinn + " Vitórias  ," + egal
@@ -174,7 +181,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         int index = 0;
         int[] best_move = new int[10];
         int[] p_lib = new int[10];
-        p_lib = poz_lib_cp(board);
+        p_lib = posicaoBotoesLivre(board);
         int nr_poz = 0;
 
         for (int cc = 1; cc <= 9; cc++) {
@@ -218,7 +225,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
 
         int best_val = 1000000;
         int[] p_lib = new int[10];
-        p_lib = poz_lib_cp(board);
+        p_lib = posicaoBotoesLivre(board);
         int nr_poz = 0;
         for (int cc = 1; cc <= 9; cc++) {
             if (p_lib[cc] > 0) {
@@ -247,7 +254,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         }
         int best_val = -1000000;
         int[] p_lib = new int[10];
-        p_lib = poz_lib_cp(board);
+        p_lib = posicaoBotoesLivre(board);
         int nr_poz = 0;
         for (int cc = 1; cc <= 9; cc++) {
             if (p_lib[cc] > 0) {

@@ -34,23 +34,23 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     private boolean wins = false;
     
     //variavel que contem a string do vencedor; X ganhou; O ganhou
-    String result;
+    String resultado;
     
     //string com o nome do jogador; X ou O
     private String player = null;
     
     //vitorias da bolinha
-    private static int vizero = 0;
+    private static int vitoriaBola = 0;
     //empate da bolinha
-    private static int inzero = 0;
+    private static int empateBola = 0;
     
     //total de empates
     private static int totalEmpate = 0;
     
     //vitoria do x
-    private static int vix = 0;
+    private static int vitoriaX = 0;
     //empate do x
-    private static int inx = 0;
+    private static int empateX = 0;
     
     //vetor auxiliar dos botoes
     private int[] copiaTabelaBotoes = new int[10];
@@ -159,10 +159,10 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     }
 
     //informa em um joptionpane quem ganhou
-    public void exibeVencedor(int vinn, int infrang, int egal, String tex) {
+    public void exibeVencedor(int vitor, int derr, int emp, String tex) {
         attLabels();
-        if (JOptionPane.showConfirmDialog(null, vinn + " Vitórias  ," + egal
-                + "  Empates ," + infrang + "  Derrotas\n" + "Jogar de novo?",
+        if (JOptionPane.showConfirmDialog(null, vitor + " Vitórias  ," + emp
+                + "  Empates ," + derr + "  Derrotas\n" + "Jogar de novo?",
                 tex, 0) != 0) {
 
 // zerando os botões
@@ -178,15 +178,15 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     
     //atualiza os labels das vitórias
     public void attLabels() {
-        lBolinha.setText(String.valueOf(vizero));
-        lxis.setText(String.valueOf(vix));
+        lBolinha.setText(String.valueOf(vitoriaBola));
+        lxis.setText(String.valueOf(vitoriaX));
     }
 
     //novo jogo, inicializa as variaveis para eliminar os antigos valores
     public void newgame() {
         counts = 0;
         wins = false;
-        result = "";
+        resultado = "";
 
         for (int i = 1; i <= 9; i++) {
             botoesFrame[i].setText("");
@@ -195,12 +195,12 @@ public class Game extends javax.swing.JFrame implements ActionListener {
     }
 
 // Metodo de AI
-    public int min_max(int[] board) {
+    public int min_max(int[] tabela) {
         int melhorValor = -1000000;
         int index = 0;
         int[] melhorJogada = new int[10];
         int[] posicoesLivres = new int[10];
-        posicoesLivres = posicaoBotoesLivre(board); //posicao dos botes que estao livres
+        posicoesLivres = posicaoBotoesLivre(tabela); //posicao dos botes que estao livres
         int numeroPosicao = 0;
 
         /*verifico quantas posicoes eu tenho livre, nao posso usar o length
@@ -214,19 +214,19 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         //cria vetor melhorJogada com base nas jogadas disponiveis
         int nr = 1;
         while (nr <= numeroPosicao) {
-            int mut = posicoesLivres[nr];
-            board[mut] = 2;
+            int aux = posicoesLivres[nr];
+            tabela[aux] = 2;
 
-            int val = MinMove(board);
+            int val = MinMove(tabela);
             if (val > melhorValor) {
                 melhorValor = val;
                 index = 0;
-                melhorJogada[index] = mut;
+                melhorJogada[index] = aux;
             } else if (val == melhorValor) {
                 index++;
-                melhorJogada[index] = mut;
+                melhorJogada[index] = aux;
             }
-            board[mut] = 0;
+            tabela[aux] = 0;
             nr++;
         }
 
@@ -240,8 +240,8 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         return melhorJogada[r];
     }
 
-    public int MinMove(int[] board) {
-        int pos_value = tabelaVencedor(board);
+    public int MinMove(int[] tabela) {
+        int pos_value = tabelaVencedor(tabela);
 
         if (pos_value != -1) {
             return pos_value;
@@ -249,7 +249,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
 
         int best_val = 1000000;
         int[] posicoesLivres = new int[10];
-        posicoesLivres = posicaoBotoesLivre(board);
+        posicoesLivres = posicaoBotoesLivre(tabela);
         int numeroPosicao = 0;
         for (int cc = 1; cc <= 9; cc++) {
             if (posicoesLivres[cc] > 0) {
@@ -258,27 +258,27 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         }
         int nr = 1;
         while (nr <= numeroPosicao) {
-            int mut = posicoesLivres[nr];
-            board[mut] = 1;
-            int val = MaxMove(board);
+            int aux = posicoesLivres[nr];
+            tabela[aux] = 1;
+            int val = MaxMove(tabela);
             if (val < best_val) {
                 best_val = val;
             }
-            board[mut] = 0;
+            tabela[aux] = 0;
             nr++;
         }
         return best_val;
     }
 
-    public int MaxMove(int[] board) {
-        int pos_value = tabelaVencedor(board);
+    public int MaxMove(int[] tabela) {
+        int pos_value = tabelaVencedor(tabela);
 
         if (pos_value != -1) {
             return pos_value;
         }
         int best_val = -1000000;
         int[] posicoesLivres = new int[10];
-        posicoesLivres = posicaoBotoesLivre(board);
+        posicoesLivres = posicaoBotoesLivre(tabela);
         int numeroPosicao = 0;
         for (int cc = 1; cc <= 9; cc++) {
             if (posicoesLivres[cc] > 0) {
@@ -288,14 +288,14 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         int nr = 1;
 
         while (nr <= numeroPosicao) {
-            int mut = posicoesLivres[nr];
-            board[mut] = 2;
-            int val = MinMove(board);
+            int aux = posicoesLivres[nr];
+            tabela[aux] = 2;
+            int val = MinMove(tabela);
             if (val > best_val) {
                 best_val = val;
             }
 
-            board[mut] = 0;
+            tabela[aux] = 0;
             nr++;
         }
         return best_val;
@@ -340,27 +340,27 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         //define a pontuacao dos jogadores e exibe o vencedor
         if (wins == true) {
             if (player == "X") {
-                vix += 1;
-                inzero += 1;
-                result = "X Ganhou o jogo!!!";
-                exibeVencedor(vix, inx, totalEmpate, result);
+                vitoriaX += 1;
+                empateBola += 1;
+                resultado = "X Ganhou o jogo!!!";
+                exibeVencedor(vitoriaX, empateX, totalEmpate, resultado);
             }
 
             if (player == "O") {
-                vizero += 1;
-                inx += 1;
-                result = "O Ganhou o jogo!!!";
-                exibeVencedor(vizero, inzero, totalEmpate, result);
+                vitoriaBola += 1;
+                empateX += 1;
+                resultado = "O Ganhou o jogo!!!";
+                exibeVencedor(vitoriaBola, empateBola, totalEmpate, resultado);
             }
         }
 
         //caso ninguem ganhou o jogo, entao há empate
         if ((nr == 9) && (counts >= 9) && (!wins)) {
             totalEmpate += 1;
-            result = "Jogo empatado!!!";
+            resultado = "Jogo empatado!!!";
 
             if (JOptionPane.showConfirmDialog(null, totalEmpate + " Empates\n"
-                    + "Jogar de novo?", result, 0) != 0) {
+                    + "Jogar de novo?", resultado, 0) != 0) {
                 System.exit(0);
             } else {
                 newgame();

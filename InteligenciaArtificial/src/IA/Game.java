@@ -109,6 +109,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         return tabela;
     }
 
+    
     @SuppressWarnings("unused")
     public int tabelaVencedor(int[] cc) {
         int res = -1;
@@ -119,7 +120,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
         
         for (int i = 0; i <= 7; i++) {
             
-            //percorre a tabela onde pra ver se o X ganhou, onde X=1
+            //verifica custos
             if ((cc[combinacoesParaVencer[i][0]] == 1)
                     && (cc[combinacoesParaVencer[i][0]] == cc[combinacoesParaVencer[i][1]])
                     && (cc[combinacoesParaVencer[i][1]] == cc[combinacoesParaVencer[i][2]])
@@ -129,7 +130,7 @@ public class Game extends javax.swing.JFrame implements ActionListener {
                 res = -1000000;
             }
 
-            //percorre a tabela onde pra ver se o O ganhou, onde O=2
+            
             if ((cc[combinacoesParaVencer[i][0]] != 2)
                     || (cc[combinacoesParaVencer[i][0]] != cc[combinacoesParaVencer[i][1]])
                     || (cc[combinacoesParaVencer[i][1]] != cc[combinacoesParaVencer[i][2]])

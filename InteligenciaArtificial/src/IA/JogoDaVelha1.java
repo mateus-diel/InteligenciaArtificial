@@ -392,13 +392,16 @@ public class JogoDaVelha1 extends JFrame implements ActionListener {
             player = "O";
             wins = true;
         }
-
-        for (int c = 1; c <= 9; c++) {
-            if ((buttons[c].getText().equals("X"))
-                    || (buttons[c].getText().equals("O"))) {
+        
+        //variavel nr obtem o total de jogadas dos players
+        for (int i = 1; i <= 9; i++) {
+            if ((buttons[i].getText().equals("X"))
+                    || (buttons[i].getText().equals("O"))) {
                 nr++;
             }
         }
+        
+        //define a pontuação de quem ganhou e chama
         if (wins == true) {
             if (player == "X") {
                 vix += 1;
@@ -421,7 +424,6 @@ public class JogoDaVelha1 extends JFrame implements ActionListener {
 
             if (JOptionPane.showConfirmDialog(null, egall + " Empates\n"
                     + "Jogar de novo?", result, 0) != 0) {
-// window.dispose();
             } else {
                 newgame();
             }
